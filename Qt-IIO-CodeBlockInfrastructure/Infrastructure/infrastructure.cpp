@@ -1,12 +1,13 @@
 #include "infrastructure.h"
 
-#include <Infrastructure/IODevice/hwkeyboardshandler.h>
+#include <Infrastructure/IODevice/hwinputdeviceshandler.h>
 
 namespace qt_iio_cc {
 namespace infrastructure {
 
 struct Infrastructure::Private {
-    HwKeyboardsHandler hwKeyboardsHandler;
+    iodevice::HwInputDevicesHandler hwInputDevicesHandler;
+    void initializeIODevices();
 };
 
 Infrastructure &Infrastructure::getInstance()
@@ -17,8 +18,7 @@ Infrastructure &Infrastructure::getInstance()
 
 bool Infrastructure::initialize()
 {
-    //@TODO: Allow library user to specify the keyboards somehow
-    m_p->hwKeyboardsHandler.addHwKeyboard("/dev/input/event4");
+    m_p->initializeIODevices();
     return true;
 }
 
@@ -26,6 +26,11 @@ Infrastructure::Infrastructure():
     m_p(new Private)
 {
 
+}
+
+void Infrastructure::Private::initializeIODevices()
+{
+    hwInputDevicesHandler.start(QStringList() << "/dev/input/");
 }
 
 

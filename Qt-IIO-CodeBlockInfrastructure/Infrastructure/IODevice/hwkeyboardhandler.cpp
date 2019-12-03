@@ -7,42 +7,30 @@
 #include <QWSServer>
 #include <QString>
 
+namespace qt_iio_cc {
+namespace infrastructure {
+namespace iodevice {
+
 HwKeyboardHandler::HwKeyboardHandler(const QString &eventFilePath, QObject *parent):
-    QObject(parent),
-    m_eventFilePath(eventFilePath),
-    m_keyboardIsPresent(false)
+    HwInputDevice(eventFilePath, parent)
 {
-    // First initialization
-    closeKeyboard();
-    onDirectoryChanged(QString());
 }
 
-void HwKeyboardHandler::onDirectoryChanged(const QString &path)
+void HwKeyboardHandler::closeAll()
 {
-    Q_UNUSED(path);
-
-    QFileInfo eventFilePathInfo(m_eventFilePath);
-    if (!m_keyboardIsPresent && eventFilePathInfo.exists()) {
-        setKeyboard();
-        qDebug() << "Keyboard at " + m_eventFilePath << " set";
-    } else if (m_keyboardIsPresent && !eventFilePathInfo.exists()) {
-        closeKeyboard();
-        qDebug() << "Keyboard at " + m_eventFilePath << " closed";
-    }
+    QWSServer* qwsServer = QWSServer::instance();
+    qwsServer->closeKeyboard();
 }
 
-void HwKeyboardHandler::setKeyboard()
+void HwKeyboardHandler::setImpl()
 {
-    QWSKeyboardHandler *pKeyboardHandler =
+    QWSKeyboardHandler *keyboardHandler =
             QKbdDriverFactory::create("LinuxInput", m_eventFilePath);
-    QWSServer* pQwsServer = QWSServer::instance();
-    pQwsServer->setKeyboardHandler(pKeyboardHandler);
-    m_keyboardIsPresent = true;
+    QWSServer* qwsServer = QWSServer::instance();
+    qwsServer->setKeyboardHandler(keyboardHandler);
+    qDebug() << "Keyboard at \"" << m_eventFilePath << "\" set";
 }
 
-void HwKeyboardHandler::closeKeyboard()
-{
-    QWSServer* pQwsServer = QWSServer::instance();
-    pQwsServer->closeKeyboard();
-    m_keyboardIsPresent = false;
-}
+} // iodevice
+} // infrastructure
+} // qt_iio_cc

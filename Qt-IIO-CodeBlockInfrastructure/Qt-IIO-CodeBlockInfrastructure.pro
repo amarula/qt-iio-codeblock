@@ -16,7 +16,6 @@ include (../Qt-IIO-CodeBlock.pri)
 
 DESTDIR = $$QT_IIO_CODEBLOCK_BUILD_ROOT/lib
 
-
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which has been marked as deprecated (the exact warnings
 # depend on your compiler). Please consult the documentation of the
@@ -29,13 +28,20 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+        Infrastructure/IODevice/hwinputdevice.cpp \
+        Infrastructure/IODevice/hwinputdevicesscanner.cpp \
         Infrastructure/IODevice/hwkeyboardhandler.cpp \
-        Infrastructure/IODevice/hwkeyboardshandler.cpp \
+        Infrastructure/IODevice/hwinputdeviceshandler.cpp \
+        Infrastructure/IODevice/hwmousehandler.cpp \
         Infrastructure/infrastructure.cpp
 
 HEADERS += \
+        Infrastructure/IODevice/hwinputdevice.h \
+        Infrastructure/IODevice/hwinputdevicesscanner.h \
+        Infrastructure/IODevice/hwiodevicetypes.h \
         Infrastructure/IODevice/hwkeyboardhandler.h \
-        Infrastructure/IODevice/hwkeyboardshandler.h \
+        Infrastructure/IODevice/hwinputdeviceshandler.h \
+        Infrastructure/IODevice/hwmousehandler.h \
         Infrastructure/infrastructure.h
 unix {
     target.path = /usr/lib
